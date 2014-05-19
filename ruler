@@ -4,14 +4,13 @@ ruler - A 140 chacter ruler to help gauge 80 char terminal width or editing.
 ----.----1----.----2----.----3----.----4----.----5----.----6----.----7----.---_8
 """
 
-import termios, fcntl, struct, sys                                                            
-from optparse import OptionParser
+import termios, fcntl, struct, sys
+import argparse
 # OptionParser is new in 2.3, deprecated in 2.7, sl6 has 2.6, *sigh*
-def term_size():                                                                               
+def term_size():
     """
     Return a tuple about character and pixel size of the terminal.
     """
-    # FIXME make this a script that returns two lines: rows and columns
     term_dim = struct.pack("HHHH", 0, 0, 0, 0)
     fd_stdout = sys.stdout.fileno()
     try:
@@ -45,6 +44,7 @@ def ruler( whitespace_length=0, ruler_length=80):
     output = ''
 
     # Build ruler with rnine sections matched with appropriate Tens value.
+    # Note the uppercase letters to indicate classic tweet length
     base35 = '123456789abcdeFGHIJKLMNOPQRSTUVWXYZ0'
     end = ruler_length/10
     for i in base35[:end]:
@@ -71,13 +71,24 @@ def ruler( whitespace_length=0, ruler_length=80):
     return output
 
 if __name__ == "__main__":
-    PARSER = OptionParser()
-    (OPTIONS, ARGS) = PARSER.parse_args()
-    if len(ARGS) > 0:
-        if len(ARGS) > 1:
-            print ruler(int(ARGS[0]), int(ARGS[1]))
-        else:
-            print ruler(int(ARGS[0]))
+    # FIXME OptionParser is deprecated for argparse in 2.7
+    PARSER = argparse.ArgumentParser(
+        description='Make a ruler of characters; terminal width is default')
+    PARSER.add_argument('-i','--info',
+                     help='Show info about terminal height and width',
+                     action='store_true')
+    PARSER.add_argument('-o','--offset',
+                     help='Use spaces to offset the ruler start',
+                     default=0,
+                     type=int)
+    PARSER.add_argument('-l','--length',
+                     help='Length of ruler in characters',
+                     default=term_size()[1],
+                     type=int)
+    ARGS = PARSER.parse_args()
+    # FIXME add -i for terminal info; returns rows and columns
+    if ARGS.info:
+        print term_size()
+        exit()
     else:
-	# Emit a ruler to fit the terminal
-        print ruler(0, term_size()[1] )
+        print ruler(int(ARGS.offset), int(ARGS.length))
