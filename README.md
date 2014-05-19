@@ -19,4 +19,4 @@ Usage
                ----.----1----.----2----.----3----.----4
 
 With no argument `ruler` will determine the terminal environment and fit the
-width, or set the length to 80 if no terminal enviroment exits.
+width, or set the length to 80 if no terminal environment exits.
