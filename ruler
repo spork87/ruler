@@ -1,12 +1,13 @@
 #!/usr/bin/python
 """
-ruler - A 140 chacter ruler to help gauge 80 char terminal width or editing.
+ruler - A character-based ruler to gauge column width in terminals or editors.
 ----.----1----.----2----.----3----.----4----.----5----.----6----.----7----.---_8
 """
 
 import termios, fcntl, struct, sys
 import argparse
-# OptionParser is new in 2.3, deprecated in 2.7, sl6 has 2.6, *sigh*
+# OptionParser is new in 2.3, deprecated in 2.7, argparse is new in 2.7,
+# RHEL6 has 2.6 stock, 2.7 in extras.
 def term_size():
     """
     Return a tuple about character and pixel size of the terminal.
@@ -15,14 +16,14 @@ def term_size():
     fd_stdout = sys.stdout.fileno()
     try:
         win_dim = fcntl.ioctl(fd_stdout, termios.TIOCGWINSZ, term_dim)
-        (rows, cols ) = struct.unpack("HHHH", win_dim)[:2]
+        (rows, cols) = struct.unpack("HHHH", win_dim)[:2]
     except IOError:
         # No terminal, say if launched in a subshell from Vim.
         # Pretend we have MS-DOS or VT100 resolution.
-        (rows, cols ) = (24, 80)
+        (rows, cols) = (24, 80)
     return (rows, cols)
 
-def ruler( whitespace_length=0, ruler_length=80):
+def ruler(whitespace_length=0, ruler_length=80):
     """
     Ruler with a set character limit, like 140 for "Twitter.com".
     Up to three args for whitespace, ruler, and truncation lengths.
@@ -30,12 +31,10 @@ def ruler( whitespace_length=0, ruler_length=80):
 	ruler
         ruler whitespace_length
         ruler whitespace_length ruler_length
-        #ruler whitespace_length ruler_length truncate_length 
+        #ruler whitespace_length ruler_length truncate_length
 
     A 10, B 11, C 12, D, 13, E 14, F 15, G 16
     """
-    # FIXME add test conditions
-    # http://wiki.python.org/moin/PythonTestingToolsTaxonomy
     truncate_length = term_size()[1]
 
     #print "%s %s %s" % (whitespace_length, ruler_length, truncate_length)
@@ -58,37 +57,36 @@ def ruler( whitespace_length=0, ruler_length=80):
     # NAIVE: output = output.replace('-8-', '_8_')
     busted_string = list(output)
     if len(busted_string) > 78:
-        busted_string[78] = '_' 
+        busted_string[78] = '_'
     if len(busted_string) > 80:
         busted_string[80] = '_'
     output = ''.join(busted_string)
 
     # Add whitespace up front, then truncate to terminal width.
-    output = '{0}{1:<}'.format( ' ' *  int(whitespace_length), output)
+    output = '{0}{1:<}'.format(' ' *  int(whitespace_length), output)
     fmt = "%%-%ds" % truncate_length
     output = fmt % output
     output = output[:truncate_length]
     return output
 
 if __name__ == "__main__":
-    # FIXME OptionParser is deprecated for argparse in 2.7
     PARSER = argparse.ArgumentParser(
         description='Make a ruler of characters; terminal width is default')
-    PARSER.add_argument('-i','--info',
+    PARSER.add_argument('-i', '--info',
                      help='Show info about terminal height and width',
                      action='store_true')
-    PARSER.add_argument('-o','--offset',
+    PARSER.add_argument('-o', '--offset',
                      help='Use spaces to offset the ruler start',
                      default=0,
                      type=int)
-    PARSER.add_argument('-l','--length',
+    PARSER.add_argument('-l', '--length',
                      help='Length of ruler in characters',
                      default=term_size()[1],
                      type=int)
     ARGS = PARSER.parse_args()
-    # FIXME add -i for terminal info; returns rows and columns
+    # Info for terminal dimensions; returns rows and columns
     if ARGS.info:
-        print term_size()
+        print(term_size())
         exit()
     else:
-        print ruler(int(ARGS.offset), int(ARGS.length))
+        print(ruler(int(ARGS.offset), int(ARGS.length)))
