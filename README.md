@@ -7,7 +7,7 @@ the full terminal width.
 Usage
 -----
 
-    ruler offset length
+    ruler [-i indent] [-l length]
 
     $ ruler
     ----.----1----.----2----.----3----.----4----.----5----.----6----.----7----.---_8_---.----9----.----a----
