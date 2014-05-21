@@ -15,7 +15,7 @@ width, or set the length to 80 if no terminal environment exits.
 Options
 -------
 
-    $ ./ruler.py -h
+    $ ./ruler -h
     usage: ruler.py [-h] [-i] [-o OFFSET] [-l LENGTH]
 
     Make a ruler of characters; terminal width is default
