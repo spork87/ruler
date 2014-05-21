@@ -1,1 +1,4 @@
 Add tests - http://wiki.python.org/moin/PythonTestingToolsTaxonomy
+Add ruler truncation length to avoid line wraps in terminals
+Add requiremtn for python 2.7+?
+Make into a Debian package and add to PPA in Ubuntu?

@@ -8,6 +8,7 @@ import termios, fcntl, struct, sys
 import argparse
 # OptionParser is new in 2.3, deprecated in 2.7, argparse is new in 2.7,
 # RHEL6 has 2.6 stock, 2.7 in extras.
+
 def term_size():
     """
     Return a tuple about character and pixel size of the terminal.
@@ -26,24 +27,19 @@ def term_size():
 def ruler(whitespace_length=0, ruler_length=80):
     """
     Ruler with a set character limit, like 140 for "Twitter.com".
-    Up to three args for whitespace, ruler, and truncation lengths.
-    Truncation would be set for the terminal width to avoid line wraps.
-	ruler
-        ruler whitespace_length
-        ruler whitespace_length ruler_length
-        #ruler whitespace_length ruler_length truncate_length
 
-    A 10, B 11, C 12, D, 13, E 14, F 15, G 16
+    Replace '-8-' with '_8_' to hint at 'classic' typewritter page width.
+
+    Extend decimal with alphabet and zero for long rulers.
+    Use uppercase letters to indicate classic tweet length.
+    	a 10, b 11, c 12, d, 13, e 14, F 15, G 16, etc.
+
     """
     truncate_length = term_size()[1]
-
-    #print "%s %s %s" % (whitespace_length, ruler_length, truncate_length)
-
     rnine = '----.----'
     output = ''
 
     # Build ruler with rnine sections matched with appropriate Tens value.
-    # Note the uppercase letters to indicate classic tweet length
     base35 = '123456789abcdeFGHIJKLMNOPQRSTUVWXYZ0'
     end = ruler_length/10
     for i in base35[:end]:
@@ -52,7 +48,7 @@ def ruler(whitespace_length=0, ruler_length=80):
     end = ruler_length % 10
     output = output + rnine[:end]
 
-    # Replace '-8-' with '_8_' to hint at 'classic' typewritter page width.
+    # Underscore neighbors for 80th column.
     # Need the partial substitution for a ruler for 79 or 80
     # NAIVE: output = output.replace('-8-', '_8_')
     busted_string = list(output)
