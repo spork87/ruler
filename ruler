@@ -69,26 +69,33 @@ def ruler(whitespace_length=0, ruler_length=80):
     return output
 
 
-if __name__ == "__main__":
-    PARSER = argparse.ArgumentParser(
+def main(argv=None):
+    """
+    Parse args and print help text, a ruler or terminal dimenstions
+    """
+    if argv is None:
+        argv = sys.argv
+    parser = argparse.ArgumentParser(
         description='Make a ruler of characters; terminal width is default')
-    PARSER.add_argument('-i', '--info',
+    parser.add_argument('-i', '--info',
                      help='Show info about terminal height and width',
                      action='store_true')
-    PARSER.add_argument('-o', '--offset',
+    parser.add_argument('-o', '--offset',
                      help='Use spaces to offset the ruler start',
                      default=0,
                      type=int)
-    PARSER.add_argument('-l', '--length',
+    parser.add_argument('-l', '--length',
                      help='Length of ruler in characters',
                      default=term_size()[1],
                      type=int)
-    ARGS = PARSER.parse_args()
+    args = parser.parse_args()
 
-    if ARGS.info:
+    if args.info:
     	# Info for terminal dimensions; returns rows and columns
         print(term_size())
         exit()
     else:
 	# Print a ruler.
-        print(ruler(int(ARGS.offset), int(ARGS.length)))
+        print(ruler(int(args.offset), int(args.length)))
+if __name__ == "__main__":
+    main()
