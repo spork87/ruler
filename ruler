@@ -6,12 +6,20 @@ ruler - A 140 chacter ruler to help gauge 80 char terminal width or editing.
 
 import termios, fcntl, struct, sys                                                            
 from optparse import OptionParser
-# OptionParser is new in 2.3, deprecated in 2.7, sl6 has 2.6, *sigh*
+# OptionParser is new in 2.3, deprecated in 2.7 and replaced with argparse
+# No ETA for removal of optparse
+# http://www.python.org/dev/peps/pep-0389/
+# sl6 has 2.6, *sigh* wait for sl7 to use argparse, or use the non-deprecated getopt
+# http://docs.python.org/2/library/getopt.html
+# http://uberpython.wordpress.com/2009/09/28/standard-library-granularity-in-python-argparse-vs-getopt/
+# That last post points out the utility of readable code, and makes me think argparse should
+# be good for another decade, while getopts is painful.
+#
+# Hey, argparse is in RHEL5, so let us use it.
 def term_size():                                                                               
     """
     Return a tuple about character and pixel size of the terminal.
     """
-    # FIXME make this a script that returns two lines: rows and columns
     term_dim = struct.pack("HHHH", 0, 0, 0, 0)
     fd_stdout = sys.stdout.fileno()
     try:
@@ -44,7 +52,7 @@ def ruler( whitespace_length=0, ruler_length=80):
     rnine = '----.----'
     output = ''
 
-    # Build ruler with rnine sections matched with appropriate Tens value.
+    # Build ruler with rnine sections matched with appropriate Tens value
     base35 = '123456789abcdeFGHIJKLMNOPQRSTUVWXYZ0'
     end = ruler_length/10
     for i in base35[:end]:
@@ -53,7 +61,7 @@ def ruler( whitespace_length=0, ruler_length=80):
     end = ruler_length % 10
     output = output + rnine[:end]
 
-    # Replace '-8-' with '_8_' to hint at 'classic' typewritter page width.
+    # Replace '-8-' with '_8_' to hint at 'classic' typewritter page width
     # Need the partial substitution for a ruler for 79 or 80
     # NAIVE: output = output.replace('-8-', '_8_')
     busted_string = list(output)
@@ -73,6 +81,8 @@ def ruler( whitespace_length=0, ruler_length=80):
 if __name__ == "__main__":
     PARSER = OptionParser()
     (OPTIONS, ARGS) = PARSER.parse_args()
+    # FIXME add -i for info about terminal size info: rows and columns
+    # FIXME avoid positional args, use short/long options o/offset l/length
     if len(ARGS) > 0:
         if len(ARGS) > 1:
             print ruler(int(ARGS[0]), int(ARGS[1]))
