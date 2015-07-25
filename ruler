@@ -43,7 +43,7 @@ def ruler(whitespace_length=0, ruler_length=80):
     output = ''
 
     # Build ruler with `rnine` sections matched with appropriate tens value.
-    base35 = '123456789abcdeFGHIJKLMNOPQRSTUVWXYZ0'
+    base35 = '123456789abcdeFGHIJKLMNOPQRSTUVWXYZABCDEfghijklmnopqrstuvwxyz0'
     end = ruler_length/10
     for i in base35[:end]:
         output = "%s%s%s" % (output, rnine, i)
