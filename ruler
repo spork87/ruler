@@ -21,7 +21,7 @@ def term_size():
         win_dim = fcntl.ioctl(fd_stdout, termios.TIOCGWINSZ, term_dim)
         (rows, cols) = struct.unpack("HHHH", win_dim)[:2]
     except IOError:
-        # Excpetion if there is no terminal, say if launched from Vim.
+        # Exception if there is no terminal, say if launched from Vim.
         # Pretend we have MS-DOS or VT100 resolution.
         (rows, cols) = (24, 80)
     return (rows, cols)
