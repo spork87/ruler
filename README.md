@@ -12,6 +12,8 @@ An offset could be used to match width of shell prompt and script name.
 With no argument `ruler` will determine the terminal environment and fit the
 width, or set the length to 80 if no terminal environment exits.
 
+In 2012 [the best tweets had under 40 characters](http://www.wired.com/2015/10/many-characters-tweet-ask-experts/), so a ruler can remind you to be succinct.
+
 Options
 -------
 
@@ -44,4 +46,5 @@ Usage
 
     $ ruler -o 11 -l 40
                ----.----1----.----2----.----3----.----4
+
 
