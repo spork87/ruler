@@ -77,17 +77,20 @@ def main(argv=None):
         argv = sys.argv
     parser = argparse.ArgumentParser(
         description='Make a ruler of characters; terminal width is default')
-    parser.add_argument('-i', '--info',
+    parser.add_argument(
+        '-i', '--info',
         help='Return terminal height and width; also available from command `stty size`',
         action='store_true')
-    parser.add_argument('-o', '--offset',
-                     help='Use spaces to offset the ruler start',
-                     default=0,
-                     type=int)
-    parser.add_argument('-l', '--length',
-                     help='Length of ruler in characters',
-                     default=term_size()[1],
-                     type=int)
+    parser.add_argument(
+        '-o', '--offset',
+        help='Use spaces to offset the ruler start',
+        default=0,
+        type=int)
+    parser.add_argument(
+        '-l', '--length',
+        help='Length of ruler in characters',
+        default=term_size()[1],
+        type=int)
     args = parser.parse_args()
 
     if args.info:
