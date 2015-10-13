@@ -27,18 +27,15 @@ def term_size():
     return (rows, cols)
 
 
-def ruler(whitespace_length=0, ruler_length=80):
+def ruler(whitespace_length=0, ruler_length=80, truncate_length=term_size()[1]):
     """
     Return a ruler with a set character limit, like 140 for "Twitter.com".
 
     Replace '-8-' with '_8_' to hint at 'classic' typewritter page width.
-
-    Extend decimal with alphabet and zero for long rulers.
-    Use uppercase letters to indicate classic tweet length.
-    	a 10, b 11, c 12, d, 13, e 14, F 15, G 16, etc.
-
+    Extend decimal with alphabet and zero for long rulers.  Use uppercase letters
+    to indicate classic tweet length.  a 10, b 11, c 12, d, 13, e 14, F 15, G 16,
+    etc.
     """
-    truncate_length = term_size()[1]
     rnine = '----.----'
     output = ''
 
@@ -52,7 +49,6 @@ def ruler(whitespace_length=0, ruler_length=80):
     output = output + rnine[:end]
 
     # Underscore neighbors for 80th column.
-    # NAIVE: output = output.replace('-8-', '_8_')
     # Do a partial substitution for a ruler with 79 or 80 characters.
     busted_string = list(output)
     if len(busted_string) > 78:
@@ -67,7 +63,6 @@ def ruler(whitespace_length=0, ruler_length=80):
     output = fmt % output
     output = output[:truncate_length]
     return output
-
 
 def main(argv=None):
     """
@@ -99,6 +94,9 @@ def main(argv=None):
         exit()
     else:
 	# Print a ruler.
-        print(ruler(int(args.offset), int(args.length)))
+        print(ruler(
+            whitespace_length=int(args.offset),
+            ruler_length=int(args.length),
+            truncate_length=int(args.length)))
 if __name__ == "__main__":
     main()
