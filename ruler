@@ -66,6 +66,16 @@ def ruler(whitespace_length=0, ruler_length=80, truncate_length=term_size()[1]):
     fmt = "%%-%ds" % truncate_length
     output = fmt % output
     output = output[:truncate_length]
+
+    # Change trailing space to visible character for glancing readability
+    """
+    ./ruler -l 8; ./ruler -l 9; ./ruler -l 10
+    - - _ -.
+    - - _ - -
+    - - _ - -1
+    """
+    if output[-1] == ' ':
+        output = output[:-1] + '.'
     return output
 
 def main(argv=None):
@@ -93,11 +103,11 @@ def main(argv=None):
     args = parser.parse_args()
 
     if args.info:
-    	# Info for terminal dimensions; returns rows and columns
+        # Info for terminal dimensions; returns rows and columns
         print(term_size())
         exit()
     else:
-	# Print a ruler.
+        # Print a ruler.
         print(ruler(
             whitespace_length=int(args.offset),
             ruler_length=int(args.length),
