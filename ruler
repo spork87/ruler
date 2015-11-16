@@ -36,7 +36,11 @@ def ruler(whitespace_length=0, ruler_length=80, truncate_length=term_size()[1]):
     to indicate classic tweet length.  a 10, b 11, c 12, d, 13, e 14, F 15, G 16,
     etc.
     """
-    rnine = '----.----'
+    # rnine = '----.----'
+    #rnine = '-_-_._-_-'
+    #rnine = '-+-+.+-+-'
+    #rnine = '- - . - -'
+    rnine = '- - _ - -'
     output = ''
 
     # Build ruler with `rnine` sections matched with appropriate tens value.
