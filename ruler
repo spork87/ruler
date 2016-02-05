@@ -2,6 +2,19 @@
 """
 ruler - A character-based ruler to gauge column width in terminals or editors.
 ----.----1----.----2----.----3----.----4----.----5----.----6----.----7----.---_
+
+USAGE
+
+    $ ./ruler
+    - - _ - -1- - _ - -2- - _ - -3- - _ - -4- - _ - -5- - _ - -6- - _ - -7- - _ - |8| - _ - -9- - _ - -a- - _ - -b- - _ - -c- - _ - -d- - _ - -e- - _ - -F- - _ - -G- - _ - -H- - _ - -I- - _ - -J-
+    $ ./ruler -l 100
+    - - _ - -1- - _ - -2- - _ - -3- - _ - -4- - _ - -5- - _ - -6- - _ - -7- - _ - |8| - _ - -9- - _ - -a
+    $ ./ruler -l 100 -b 10
+    - - _ - -2- - _ - -3- - _ - -4- - _ - -5- - _ - -6- - _ - -7- - _ - |8| - _ - -9- - _ - -a
+    $ ./ruler -l 100 -b 10 -o 10
+              - - _ - -2- - _ - -3- - _ - -4- - _ - -5- - _ - -6- - _ - -7- - _ - |8| - _ - -9- - _ - -a
+    $ ./ruler -l 102 -b 10 -o 10
+              - - _ - -2- - _ - -3- - _ - -4- - _ - -5- - _ - -6- - _ - -7- - _ - |8| - _ - -9- - _ - -a-.
 """
 import termios
 import fcntl
@@ -50,11 +63,18 @@ def ruler(whitespace_length=0, ruler_length=80, begin_number=0, truncate_length=
     end = ruler_length/10
     for i in base35[:end]:
         output = "%s%s%s" % (output, rnine, i)
-    # Trim start of ruler until beginning number reached.
-    output = output[begin_number:]
     # Add the remaining ruler characters for ruler length.
     end = ruler_length % 10
     output = output + rnine[:end]
+    # Change trailing space to visible character for glancing readability
+    """
+    ./ruler -l 8; ./ruler -l 9; ./ruler -l 10
+    - - _ -.
+    - - _ - -
+    - - _ - -1
+    """
+    if output[-1] == ' ':
+        output = output[:-1] + '.'
 
     # Highlight neighbors of special column (often 80)
     # Do a partial substitution for a ruler with 79 or 80 characters.
@@ -66,21 +86,15 @@ def ruler(whitespace_length=0, ruler_length=80, begin_number=0, truncate_length=
         busted_string[highlight_number] = special_column_char
     output = ''.join(busted_string)
 
+    # Trim start of ruler until beginning number reached.
+    output = output[begin_number:]
+
     # Add whitespace up front, then truncate to terminal width.
     output = '{0}{1:<}'.format(' ' *  int(whitespace_length), output)
     fmt = "%%-%ds" % (truncate_length - begin_number)
     output = fmt % output
     output = output[:truncate_length]
 
-    # Change trailing space to visible character for glancing readability
-    """
-    ./ruler -l 8; ./ruler -l 9; ./ruler -l 10
-    - - _ -.
-    - - _ - -
-    - - _ - -1
-    """
-    if output[-1] == ' ':
-        output = output[:-1] + '.'
     return output
 
 def main(argv=None):
