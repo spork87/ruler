@@ -27,7 +27,7 @@ def term_size():
     return (rows, cols)
 
 
-def ruler(whitespace_length=0, ruler_length=80, truncate_length=term_size()[1]):
+def ruler(whitespace_length=0, ruler_length=80, begin_number=0, truncate_length=term_size()[1]):
     """
     Return a ruler with a set character limit, like 140 for "Twitter.com".
 
@@ -48,6 +48,8 @@ def ruler(whitespace_length=0, ruler_length=80, truncate_length=term_size()[1]):
     end = ruler_length/10
     for i in base35[:end]:
         output = "%s%s%s" % (output, rnine, i)
+    # Trim start of ruler until beginning number reached.
+    output = output[begin_number:]
     # Add the remaining ruler characters for ruler length.
     end = ruler_length % 10
     output = output + rnine[:end]
@@ -55,15 +57,16 @@ def ruler(whitespace_length=0, ruler_length=80, truncate_length=term_size()[1]):
     # Underscore neighbors for 80th column.
     # Do a partial substitution for a ruler with 79 or 80 characters.
     busted_string = list(output)
+    special_column_char = "|";
     if len(busted_string) > 78:
-        busted_string[78] = '_'
+        busted_string[78] = special_column_char
     if len(busted_string) > 80:
-        busted_string[80] = '_'
+        busted_string[80] = special_column_char
     output = ''.join(busted_string)
 
     # Add whitespace up front, then truncate to terminal width.
     output = '{0}{1:<}'.format(' ' *  int(whitespace_length), output)
-    fmt = "%%-%ds" % truncate_length
+    fmt = "%%-%ds" % (truncate_length - begin_number)
     output = fmt % output
     output = output[:truncate_length]
 
@@ -96,6 +99,11 @@ def main(argv=None):
         default=0,
         type=int)
     parser.add_argument(
+        '-b', '--begin',
+        help='Begin counting at this number',
+        default=0,
+        type=int)
+    parser.add_argument(
         '-l', '--length',
         help='Length of ruler in characters',
         default=term_size()[1],
@@ -111,6 +119,7 @@ def main(argv=None):
         print(ruler(
             whitespace_length=int(args.offset),
             ruler_length=int(args.length),
+            begin_number=int(args.begin),
             truncate_length=int(args.length)))
 if __name__ == "__main__":
     main()
