@@ -42,6 +42,8 @@ def ruler(whitespace_length=0, ruler_length=80, begin_number=0, truncate_length=
     #rnine = '- - . - -'
     rnine = '- - _ - -'
     output = ''
+    special_column_char = "|"
+    highlight_number = 80
 
     # Build ruler with `rnine` sections matched with appropriate tens value.
     base35 = '123456789abcdeFGHIJKLMNOPQRSTUVWXYZABCDEfghijklmnopqrstuvwxyz0'
@@ -54,14 +56,14 @@ def ruler(whitespace_length=0, ruler_length=80, begin_number=0, truncate_length=
     end = ruler_length % 10
     output = output + rnine[:end]
 
-    # Underscore neighbors for 80th column.
+    # Highlight neighbors of special column (often 80)
     # Do a partial substitution for a ruler with 79 or 80 characters.
+    left_neighbor = highlight_number - 2
     busted_string = list(output)
-    special_column_char = "|";
-    if len(busted_string) > 78:
-        busted_string[78] = special_column_char
-    if len(busted_string) > 80:
-        busted_string[80] = special_column_char
+    if len(busted_string) > left_neighbor:
+        busted_string[left_neighbor] = special_column_char
+    if len(busted_string) > highlight_number:
+        busted_string[highlight_number] = special_column_char
     output = ''.join(busted_string)
 
     # Add whitespace up front, then truncate to terminal width.
