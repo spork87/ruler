@@ -6,7 +6,7 @@ ruler - A character-based ruler to gauge column width in terminals or editors.
 USAGE
 
     $ ./ruler
-    - - _ - -1- - _ - -2- - _ - -3- - _ - -4- - _ - -5- - _ - -6- - _ - -7- - _ - |8| - _ - -9- - _ - -a- - _ - -b- - _ - -c- - _ - -d- - _ - -e- - _ - -F- - _ - -G- - _ - -H- - _ - -I- - _ - -J-
+    - - _ - -1- - _ - -2- - _ - -3- - _ - -4- - _ - -5- - _ - -6- - _ - -7- - _ - |8| - _ - -9- - _ - -a- - _ - -b- - _ - -c- - _ - -d- - _ - -e- - _ - -F- - _ - -G- - _
     $ ./ruler -l 100
     - - _ - -1- - _ - -2- - _ - -3- - _ - -4- - _ - -5- - _ - -6- - _ - -7- - _ - |8| - _ - -9- - _ - -a
     $ ./ruler -l 100 -b 10
@@ -48,6 +48,12 @@ def ruler(whitespace_length=0, ruler_length=80, begin_number=0, truncate_length=
     Extend decimal with alphabet and zero for long rulers.  Use uppercase letters
     to indicate classic tweet length.  a 10, b 11, c 12, d, 13, e 14, F 15, G 16,
     etc.
+
+    Change trailing space to visible character for glancing readability
+        ./ruler -l 8; ./ruler -l 9; ./ruler -l 10
+        - - _ -.
+        - - _ - -
+        - - _ - -1
     """
     # rnine = '----.----'
     #rnine = '-_-_._-_-'
@@ -66,13 +72,8 @@ def ruler(whitespace_length=0, ruler_length=80, begin_number=0, truncate_length=
     # Add the remaining ruler characters for ruler length.
     end = ruler_length % 10
     output = output + rnine[:end]
+
     # Change trailing space to visible character for glancing readability
-    """
-    ./ruler -l 8; ./ruler -l 9; ./ruler -l 10
-    - - _ -.
-    - - _ - -
-    - - _ - -1
-    """
     if output[-1] == ' ':
         output = output[:-1] + '.'
 
